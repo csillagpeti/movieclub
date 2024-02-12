@@ -1,0 +1,16 @@
+.actioncontainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.maincontent {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .maincontent {
+        max-width: 60vw;
+        margin: 0 auto; /* Center the content */
+    }
+}
