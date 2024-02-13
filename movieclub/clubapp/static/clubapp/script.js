@@ -10,10 +10,10 @@ function getCSRFToken() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".addbutton").forEach((button) => {
+  document.querySelectorAll(".togglelistbutton").forEach((button) => {
     button.addEventListener("click", function (e) {
       e.preventDefault();
-
+      console.log("Button clicked:", this.getAttribute("data-id"));
       const movieId = this.getAttribute("data-id");
       const movieTitle = this.getAttribute("data-title");
 
