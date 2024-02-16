@@ -1,6 +1,11 @@
 <div class="container-fluid mt-3 maincontent">
     <div class="list-group">
         {% for movie in movies %}
+        <div>
+            {% for key, value in movie.items %}
+                <p><strong>{{ key }}:</strong> {{ value }}</p>
+            {% endfor %}
+        </div>
         <div class="list-group-item flex-column align-items-start py-3">
             <div class="d-flex w-100 justify-content-between">
                 {% if movie.poster_path %}
@@ -18,7 +23,7 @@
                         {% if movie.in_user_list %}
                             <button class="align-self-center btn btn-primary togglelistbutton" data-id="{{ movie.id }}">Remove from Favorites</button>
                         {% else %}
-                            <button class="align-self-center btn btn-primary togglelistbutton" data-id="{{ movie.id }}" data-title="{{ movie.title|truncatechars:255 }}">Add to Favorites</button>
+                            <button class="align-self-center btn btn-primary togglelistbutton" data-id="{{ movie.id }}" data-title="{{ movie.title|truncatechars:255 }}" data-poster-path="{{movie.poster_path}}" data-overview="{{movie.overview|truncatechars:150}}" data-release-date="{{movie.release_date}}" data-vote-average="{{movie.vote_average}}">Add to Favorites</button>
                         {% endif %}
                     {% endif %}
                 </div>

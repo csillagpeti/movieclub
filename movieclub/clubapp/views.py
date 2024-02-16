@@ -1,12 +1,14 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.conf import settings
 from .fetch_tmdb import fetch_movie_titles
 from .models import User, Movie
+
+import json
 
 # Create your views here.
 
@@ -19,7 +21,7 @@ def index(request):
 
     for movie in movies:
         movie['in_user_list'] = movie['id'] in user_movie_ids
-        
+    print('Index movies: ', movies)
     return render(request, "clubapp/index.html", {"movies": movies, "total_pages": total_pages, "current_page": current_page})
 
 def login_view(request):
@@ -75,13 +77,28 @@ def register(request):
 
 @login_required
 def toggle_movie_list(request):
-    movie_id = request.POST.get("movie_id")
-    movie_title = request.POST.get("movie_title")
+    print(request.body)
+    data = json.loads(request.body)
+    movie_id = data.get("movie_id")
+    movie_title = data.get("movie_title")
+    movie_poster_path = data.get("movie_poster_path")
+    movie_overview = data.get("movie_overview")
+    movie_release_date = data.get("movie_release_date")
+    movie_vote_average = data.get("movie_vote_average")
+
 
     if not movie_id or not movie_title:
         return HttpResponse('Movie ID and title are required.', status=400)
     
-    movie, created = Movie.objects.get_or_create(movie_id=movie_id, defaults={'movie_title': movie_title})
+    movie, created = Movie.objects.get_or_create(
+        movie_id=movie_id, 
+        defaults={
+            'movie_title': movie_title,
+            'movie_poster_path': movie_poster_path,
+            'movie_overview': movie_overview,
+            'movie_release_date': movie_release_date,
+            'movie_vote_average': movie_vote_average
+            })
 
     if movie in request.user.movies.all():
         request.user.movies.remove(movie)
@@ -90,4 +107,26 @@ def toggle_movie_list(request):
         request.user.movies.add(movie)
         action = "added"
     
-    return HttpResponse(action, status=200)
+    return JsonResponse({'action': action})
+
+def my_list(request):
+    if request.user.is_authenticated:
+        movies = []
+        user_movies = request.user.movies.all()
+        print('User movies: ', user_movies)
+        for movie in user_movies:
+            movie_entry = {
+                "title": movie.movie_title if movie.movie_title else "No Title",
+                "poster_path": movie.movie_poster_path if movie.movie_poster_path else "No Path",
+                "overview": movie.movie_overview if movie.movie_overview else "No overview",
+                "release_date": movie.movie_release_date if movie.movie_release_date else "No Release Date",
+                "vote_average": movie.movie_vote_average if movie.movie_vote_average else "No Votes",
+                "id": movie.movie_id if movie.movie_id else "No Movie ID",
+                "in_user_list": True
+            }
+            movies.append(movie_entry)
+        print('User movies: ', movies)
+
+
+        
+    return render(request, "clubapp/my_list.html", {"movies": movies})
