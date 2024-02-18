@@ -1,0 +1,26 @@
+{% extends "clubapp/layout.html" %}
+
+{% block body %}
+    <h2>Compare movies</h2>
+    {% if not movies and not target_user %}
+        <form action="/users" method="GET">
+            <input type="text" id="username" name="username" placeholder="Enter username"></input><br>
+            <button type="submit" class="align-self-center btn btn-primary searchbutton">Let's check!</button>  
+        </form>
+    {% else %}
+        {% if target_user %}
+            <div>
+                Common movies with <b>{{ username }}</b>:<br>
+                <a href="{{ request.path }}">
+                    <button class="align-self-center btn btn-primary pagingbutton">Search again</button>
+                </a><br>
+            </div>
+            {% include "clubapp/list_display.html" %}
+        {% else %}
+            <div>No user found with username "{{ username }}".</div>
+            <a href="{{ request.path }}">
+                <button class="align-self-center btn btn-primary pagingbutton">Search again</button>
+            </a>
+        {% endif %}
+    {% endif %}
+{% endblock %}

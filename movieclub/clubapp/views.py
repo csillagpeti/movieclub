@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.conf import settings
-from .fetch_tmdb import fetch_movie_titles
+from .fetch_tmdb import fetch_movie_titles, search_movie_titles
 from .models import User, Movie
 
 import json
@@ -14,10 +14,12 @@ import json
 
 def index(request):
     user_movie_ids = set()
+    page = request.GET.get('page', 1)
+
     if request.user.is_authenticated:
         user_movie_ids = set(request.user.movies.values_list('movie_id', flat=True))
 
-    movies, current_page, total_pages = fetch_movie_titles(settings.TMDB_API_KEY)
+    movies, total_pages, current_page = fetch_movie_titles(settings.TMDB_API_KEY, page)
 
     for movie in movies:
         movie['in_user_list'] = movie['id'] in user_movie_ids
@@ -126,7 +128,53 @@ def my_list(request):
             }
             movies.append(movie_entry)
         print('User movies: ', movies)
-
-
-        
     return render(request, "clubapp/my_list.html", {"movies": movies})
+
+def search(request):
+    user_movie_ids = set()
+    page = request.GET.get('page', 1)
+    query = request.GET.get('query')
+    
+    if request.user.is_authenticated:
+        user_movie_ids = set(request.user.movies.values_list('movie_id', flat=True))
+
+    if query:
+        movies, total_pages, current_page, queryString = search_movie_titles(settings.TMDB_API_KEY, query, page)
+
+        for movie in movies:
+            movie['in_user_list'] = movie['id'] in user_movie_ids
+        print('Index movies: ', movies)
+        return render(request, "clubapp/search.html", {"movies": movies, "total_pages": total_pages, "current_page": current_page, "queryString": queryString})
+    return render(request, "clubapp/search.html")
+
+def users(request):
+    common_movies = []
+    username = request.GET.get('username')
+    target_user = None
+    
+    if username and request.user.is_authenticated:
+        try:
+            target_user = User.objects.get(username=username)
+            logged_in_user_movies = request.user.movies.all()
+            for movie in logged_in_user_movies:
+                if target_user.movies.filter(id=movie.id).exists():
+                    movie_entry = {
+                        "title": movie.movie_title if movie.movie_title else "No Title",
+                        "poster_path": movie.movie_poster_path if movie.movie_poster_path else "No Path",
+                        "overview": movie.movie_overview if movie.movie_overview else "No overview",
+                        "release_date": movie.movie_release_date if movie.movie_release_date else "No Release Date",
+                        "vote_average": movie.movie_vote_average if movie.movie_vote_average else "No Votes",
+                        "id": movie.id,
+                        "in_user_list": True,
+                    }
+                    common_movies.append(movie_entry)
+        except User.DoesNotExist:
+            target_user = None
+
+    context = {
+        "username": username,
+        "movies": common_movies, 
+        "target_user": target_user,
+    }
+
+    return render(request, "clubapp/users.html", context)
