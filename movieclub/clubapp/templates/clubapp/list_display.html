@@ -18,7 +18,7 @@
                     <a href="https://www.themoviedb.org/movie/{{movie.id}}" target="_blank" class="align-self-center btn btn-primary detailsbutton" data-id="{{movie.id}}">More details</a><br>
                     {% if user.is_authenticated %}
                         {% if movie.in_user_list %}
-                            <button class="align-self-center btn btn-primary togglelistbutton" data-id="{{ movie.id }}">Remove from Favorites</button>
+                            <button class="align-self-center btn btn-primary togglelistbutton" data-id="{{ movie.id }}" data-title="{{ movie.title|truncatechars:255 }}" data-poster-path="{{movie.poster_path}}" data-overview="{{movie.overview|truncatechars:150}}" data-release-date="{{movie.release_date}}" data-vote-average="{{movie.vote_average}}">Remove from Favorites</button>
                         {% else %}
                             <button class="align-self-center btn btn-primary togglelistbutton" data-id="{{ movie.id }}" data-title="{{ movie.title|truncatechars:255 }}" data-poster-path="{{movie.poster_path}}" data-overview="{{movie.overview|truncatechars:150}}" data-release-date="{{movie.release_date}}" data-vote-average="{{movie.vote_average}}">Add to Favorites</button>
                         {% endif %}

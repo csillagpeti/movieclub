@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const movieReleaseDate = this.getAttribute("data-release-date");
       const movieVoteAverage = this.getAttribute("data-vote-average");
 
-      // Use fetch to send a POST request
       fetch("toggle_movie_list/", {
         method: "POST",
         headers: {
