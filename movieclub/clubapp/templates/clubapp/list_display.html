@@ -9,7 +9,7 @@
                     <img src="https://critics.io/img/movies/poster-placeholder.png" alt="{{ movie.title }}" class="mr-3 align-self-center" style="height: 92px;">
                 {% endif %}
                 <div class="flex-grow-1">
-                    <h5 class="mb-1">{{ movie.title }} {{movie.id}}</h5>
+                    <h5 class="mb-1">{{ movie.title }}</h5>
                     <p class="mb-1 overview">{{ movie.overview|truncatechars:150 }}</p>
                     <small class="text-muted">Release date: {{ movie.release_date }}</small><br>
                     <small class="text-muted">Rating: {{ movie.vote_average }}/10</small>
