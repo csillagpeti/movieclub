@@ -77,6 +77,8 @@ def register(request):
     else:
         return render(request, "clubapp/register.html")
 
+# Add/Remove Favorite
+
 @login_required
 def toggle_movie_list(request):
     print(request.body)
@@ -130,6 +132,8 @@ def my_list(request):
         print('User movies: ', movies)
     return render(request, "clubapp/my_list.html", {"movies": movies})
 
+# Handles movie search
+
 def search(request):
     user_movie_ids = set()
     page = request.GET.get('page', 1)
@@ -146,6 +150,8 @@ def search(request):
         print('Index movies: ', movies)
         return render(request, "clubapp/search.html", {"movies": movies, "total_pages": total_pages, "current_page": current_page, "queryString": queryString})
     return render(request, "clubapp/search.html")
+
+# Handles user search and common movies
 
 def users(request):
     common_movies = []
@@ -164,7 +170,7 @@ def users(request):
                         "overview": movie.movie_overview if movie.movie_overview else "No overview",
                         "release_date": movie.movie_release_date if movie.movie_release_date else "No Release Date",
                         "vote_average": movie.movie_vote_average if movie.movie_vote_average else "No Votes",
-                        "id": movie.id,
+                        "id": movie.movie_id,
                         "in_user_list": True,
                     }
                     common_movies.append(movie_entry)

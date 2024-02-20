@@ -8,7 +8,16 @@
     width: 100%;
 }
 
+.content{
+    width: 80%;
+    margin: 0 auto;
+}
+
 @media (min-width: 768px) {
+    .content {
+        max-width: 80vw;
+        margin: 0 auto; /* Center the content */
+    }
     .maincontent {
         max-width: 60vw;
         margin: 0 auto; /* Center the content */
@@ -23,4 +32,54 @@
 
 .pagingbutton, .searchbutton {
     margin-top: 10px;
+}
+
+
+.btn-info {
+    background-color: hsl(202, 86%, 47%); 
+    border-color: hsl(202, 86%, 47%); 
+}
+
+.btn-danger {
+    background-color: hsl(359, 70%, 58%); 
+    border-color: hsl(359, 70%, 58%); 
+}
+
+.panel{
+    max-height: 182px;
+    display: flex;
+}
+
+
+@media (max-width: 768px) {
+    h5.mb-1{
+        font-size: 0.8rem;
+    }
+    .overview {
+        font-size: 0.8rem;
+    }
+    .actioncontainer{
+        max-width: 50px;
+        margin: 0 auto;
+    }
+    .panel{
+        padding: 30px;
+    }
+    .togglelistbutton, .detailsbutton{
+        font-size: 0.8rem;
+        max-width: 65px;
+    }
+}
+
+@media (max-width: 480px) {
+    .overview{
+        display: none;
+    }
+    .togglelistbutton{
+        max-width: 65px;
+        font-size: 0.75rem;
+    }
+    .nav-link{
+        padding: 0.3rem;
+    }
 }
