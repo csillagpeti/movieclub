@@ -23,7 +23,7 @@ def index(request):
 
     for movie in movies:
         movie['in_user_list'] = movie['id'] in user_movie_ids
-    print('Index movies: ', movies)
+    #print('Index movies: ', movies)
     return render(request, "clubapp/index.html", {"movies": movies, "total_pages": total_pages, "current_page": current_page})
 
 def login_view(request):
@@ -81,7 +81,7 @@ def register(request):
 
 @login_required
 def toggle_movie_list(request):
-    print(request.body)
+    #print(request.body)
     data = json.loads(request.body)
     movie_id = data.get("movie_id")
     movie_title = data.get("movie_title")
@@ -117,7 +117,7 @@ def my_list(request):
     if request.user.is_authenticated:
         movies = []
         user_movies = request.user.movies.all()
-        print('User movies: ', user_movies)
+        #print('User movies: ', user_movies)
         for movie in user_movies:
             movie_entry = {
                 "title": movie.movie_title if movie.movie_title else "No Title",
@@ -129,7 +129,7 @@ def my_list(request):
                 "in_user_list": True
             }
             movies.append(movie_entry)
-        print('User movies: ', movies)
+        #print('User movies: ', movies)
     return render(request, "clubapp/my_list.html", {"movies": movies})
 
 # Handles movie search
@@ -147,7 +147,7 @@ def search(request):
 
         for movie in movies:
             movie['in_user_list'] = movie['id'] in user_movie_ids
-        print('Index movies: ', movies)
+        #print('Index movies: ', movies)
         return render(request, "clubapp/search.html", {"movies": movies, "total_pages": total_pages, "current_page": current_page, "queryString": queryString})
     return render(request, "clubapp/search.html")
 

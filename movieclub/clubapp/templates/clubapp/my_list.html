@@ -2,5 +2,8 @@
 
 {% block body %}
     <h2>My Movies</h2>
+        {%if not movies %}
+            <i>No movies to display. Add from popular movies, or search for one.</i>
+        {% endif %}
         {% include "clubapp/list_display.html" %}
 {% endblock %}
